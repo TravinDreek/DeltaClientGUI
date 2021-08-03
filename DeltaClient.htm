@@ -1,0 +1,306 @@
+<!doctype html>
+<html lang="zh-cmn-Hans">
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, shrink-to-fit=no"/>
+		<meta name="renderer" content="webkit"/>
+		<meta name="force-rendering" content="webkit"/>
+		<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"/>
+
+		<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/mdui@1.0.1/dist/css/mdui.min.css" integrity="sha384-cLRrMq39HOZdvE0j6yBojO4+1PrHfB7a9l5qLcmRm/fiWXYY+CndJPmyu5FV/9Tw" crossorigin="anonymous"/>
+		<style>
+			@keyframes fadeIn {
+				from {
+					opacity: 0;
+					transform: translateX(5%)
+				}
+				to {
+					opacity: 1;
+					transform: translateX(0);
+				}
+			}
+
+			::-webkit-scrollbar{
+				width: 0px;
+			}
+			body {
+				user-select:none;
+				position: absolute;
+				width: 100%;
+				height: 100%;
+				background-repeat: no-repeat;
+				background-size: 100% 100%; 
+				background-attachment: fixed;
+			}
+		</style>
+		<title>Delta Client</title>
+	</head>
+	<body class="mdui-theme-primary-red mdui-theme-accent-blue">
+		<header class="mdui-appbar mdui-appbar-fixed">
+			<div class="mdui-toolbar mdui-color-theme">
+				<button id="appbar_modules" class="mdui-btn mdui-btn-icon mdui-ripple mdui-ripple-white"><i class="mdui-icon material-icons">home</i></button>
+				<a class="mdui-typo-headline" id="appbar_title"></a>
+				<div class="mdui-toolbar-spacer"></div>
+				<button id="appbar_clientsettings" class="mdui-btn mdui-btn-icon mdui-ripple mdui-ripple-white"><i class="mdui-icon material-icons">settings</i></button>
+				<button id="appbar_usersettings" class="mdui-btn mdui-btn-icon mdui-ripple mdui-ripple-white"><i class="mdui-icon material-icons">person</i></button>
+			</div>
+		</header>
+		
+		<div class="mdui-appbar" style="opacity: 0"><div class="mdui-toolbar"></div></div>
+		
+		<div id="window_modules" hidden>
+			<div class="mdui-container-fluid">
+				<div class="mdui-textfield">
+					<i class="mdui-icon material-icons">search</i>
+					<input oninput="refreshSearchResult()" id="window_modules_search" class="mdui-textfield-input" placeholder="Search"/>
+				</div>
+				<ul class="mdui-list" id="window_modules_list"></ul>
+			</div>
+		</div>
+		<div id="window_clientsettings" hidden>
+			<div class="mdui-container">
+				<p class="mdui-typo-title">Theme</p>
+				<div class="mdui-row-xs-1 mdui-row-sm-2 mdui-row-md-3">
+					<div class="mdui-col">
+						<label class="mdui-radio mdui-m-b-1">
+						<input type="radio" name="doc-theme-layout" value="light" checked>
+						<i class="mdui-radio-icon"></i>Light</label>
+					</div>
+					<div class="mdui-col">
+						<label class="mdui-radio mdui-m-b-1">
+						<input type="radio" name="doc-theme-layout" value="dark">
+						<i class="mdui-radio-icon"></i>Dark</label>
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<div id="window_usersettings" hidden>
+			<div class="mdui-container">
+				<p class="mdui-typo-title">Your Profile</p>
+				<div style="text-align: center;">
+					<img class="mdui-img-circle" style="height: 100px; width: 100px;" id="window_usersettings_avatar" mdui-tooltip="{content: 'Click to Change'}" src="https://avatars.githubusercontent.com/u/34597453?s=460"/>
+					<div class="mdui-text-color-theme-text" style="margin-top: 8px; font-size: 24px;" id="window_usersettings_username" mdui-tooltip="{content: 'Click to Change'}">Peaksol</div>
+				</div>
+			</div>
+		</div>
+
+		<div class="mdui-dialog" id="popup_modulesettings">
+			<div class="mdui-dialog-title">Module Settings</div>
+			<div class="mdui-dialog-content" id="popup_modulesettings_content">
+				<p class="mdui-typo-title">Mode</p>
+				<form class="mdui-row-xs-1 mdui-row-sm-2 mdui-row-md-3">
+					<div class="mdui-col">
+					<label class="mdui-radio mdui-m-b-1">
+						<input type="radio" name="doc-theme-layout" checked="">
+						<i class="mdui-radio-icon"></i>Mode 1</label>
+					</div>
+					<div class="mdui-col">
+					<label class="mdui-radio mdui-m-b-1">
+						<input type="radio" name="doc-theme-layout">
+						<i class="mdui-radio-icon"></i>Mode 2</label>
+					</div>
+					<div class="mdui-col">
+					<label class="mdui-radio mdui-m-b-1">
+						<input type="radio" name="doc-theme-layout">
+						<i class="mdui-radio-icon"></i>Mode 3</label>
+					</div>
+				</form>
+				<p class="mdui-typo-title">Slider 1</p>
+				<label class="mdui-slider mdui-slider-discrete">
+					<input type="range" step="1" min="0" max="360"/>
+				</label>
+				<p class="mdui-typo-title">Slider 2</p>
+				<label class="mdui-slider mdui-slider-discrete">
+					<input type="range" step="1" min="0" max="20"/>
+				</label>
+				<p class="mdui-typo-title">Slider 3</p>
+				<label class="mdui-slider mdui-slider-discrete">
+					<input type="range" step="1" min="0" max="20"/>
+				</label>
+				<p class="mdui-typo-title">Switches</p>
+				<ul class="mdui-list">
+					<li class="mdui-list-item mdui-ripple">
+						<div class="mdui-list-item-content">Switch 1</div>
+						<label class="mdui-switch">
+							<input type="checkbox" checked/>
+							<i class="mdui-switch-icon"></i>
+						</label>
+					</li>
+					<li class="mdui-list-item mdui-ripple">
+						<div class="mdui-list-item-content">Switch 2</div>
+						<label class="mdui-switch">
+							<input type="checkbox"/>
+							<i class="mdui-switch-icon"></i>
+						</label>
+					</li>
+					<li class="mdui-list-item mdui-ripple">
+						<div class="mdui-list-item-content">Switch 3</div>
+						<label class="mdui-switch">
+							<input type="checkbox"/>
+							<i class="mdui-switch-icon"></i>
+						</label>
+					</li>
+				</ul>
+			</div>
+			
+			<div class="mdui-dialog-actions">
+				<button class="mdui-btn mdui-ripple mdui-float-left" mdui-dialog-cancel="">CANCEL</button>
+				<button class="mdui-btn mdui-ripple" mdui-dialog-confirm="" id="popup_modulesettings_save">SAVE</button>
+			</div>
+		</div>
+
+		<script src="https://cdn.jsdelivr.net/npm/mdui@1.0.1/dist/js/mdui.min.js" integrity="sha384-gCMZcshYKOGRX9r6wbDrvF+TcCCswSHFucUzUPwka+Gr+uHgjlYvkABr95TCOz3A" crossorigin="anonymous"></script>
+		
+		
+		<script src="test.js"></script>
+
+		<script>
+			var $ = mdui.$;
+			var popup_modulesettings = new mdui.Dialog('#popup_modulesettings', {modal: true, closeOnEsc: false, history: false});
+			var settings = new Array();
+			var modules;
+
+			// function switchtheme() {
+			// 	if(document.getElementsByTagName("body")[0].classList.contains("mdui-theme-layout-dark")) {
+			// 		document.getElementsByTagName("body")[0].classList.remove("mdui-theme-layout-dark");
+			// 		document.getElementById("themebutton").innerText = "brightness_3";
+			// 	}
+			// 	else {
+			// 		document.getElementsByTagName("body")[0].classList.add("mdui-theme-layout-dark");
+			// 		document.getElementById("themebutton").innerText = "wb_sunny";
+			// 	}
+			// }
+
+			$('#appbar_modules').on('click', function() {
+				$('#window_clientsettings').prop('hidden', true);
+				$('#appbar_clientsettings').prop('disabled', false);
+				$('#window_usersettings').prop('hidden', true);
+				$('#appbar_usersettings').prop('disabled', false);
+				$('#appbar_title').text('Modules');
+				$('#appbar_modules').prop('disabled', true);
+				$('#window_modules_search').val('');
+				for(module in modules) {
+					$('#window_modules_list_' + module).find('input').prop('checked', api.getModuleStatus(module));
+					$('#window_modules_list_' + module).prop('hidden', false);
+				}
+				$('#window_modules').prop('hidden', false);
+				$('#window_modules').css('animation','fadeIn 0.5s');
+				setTimeout(function() {$('#window_modules').css('animation','none')}, 500);
+			});
+
+			$('#appbar_clientsettings').on('click', function() {
+				$('#window_modules').prop('hidden', true);
+				$('#appbar_modules').prop('disabled', false);
+				$('#window_usersettings').prop('hidden', true);
+				$('#appbar_usersettings').prop('disabled', false);
+				$('#appbar_title').text('Client Settings');
+				$('#appbar_clientsettings').prop('disabled', true);
+				$('#window_clientsettings').prop('hidden', false);
+				$('#window_clientsettings').css('animation','fadeIn 0.5s');
+				setTimeout(function() {$('#window_clientsettings').css('animation','none')}, 500);
+			});
+
+			$('#appbar_usersettings').on('click', function() {
+				$('#window_modules').prop('hidden', true);
+				$('#appbar_modules').prop('disabled', false);
+				$('#window_clientsettings').prop('hidden', true);
+				$('#appbar_clientsettings').prop('disabled', false);
+				$('#appbar_title').text('User Settings');
+				$('#appbar_usersettings').prop('disabled', true);
+				$('#window_usersettings').prop('hidden', false);
+				$('#window_usersettings').css('animation','fadeIn 0.5s');
+				setTimeout(function() {$('#window_usersettings').css('animation','none')}, 500);
+			});
+
+			$('#window_usersettings_username').on('click', function() {
+				mdui.prompt('Change your nickname',
+					function (value) {
+						$('#window_usersettings_username').text(value);
+					}
+				)
+			});
+
+			function setModuleList(modules) {
+				this.modules = modules;
+				$('#window_modules_list').empty();
+				for(module in modules) {
+					$('#window_modules_list').append('<li class="mdui-list-item mdui-ripple" id="window_modules_list_' + module + '"><div class="mdui-list-item-content" onclick="openModuleSettings(\'' + module + '\')"><div class="mdui-list-item-title">' + module + '</div><div class="mdui-list-item-text">' + modules[module] + '</div></div><label class="mdui-switch"><input type="checkbox" onclick="api.setModuleStatus(\'' + module + '\', $(\'#window_modules_list_' + module + '\').find(\'input\').is(\':checked\'))"/><i class="mdui-switch-icon"></i></label></li>');
+				}
+			}
+
+			function saveModuleSettings(name) {
+				var config = new Object();
+				for(setting in settings) {
+					switch(settings[setting]) {
+						case 'radio':
+							$.each($('#popup_modulesettings_content_' + setting).find('input'), function(index, value) {
+								if(value.checked) config[setting] = index;
+							});
+							break;
+						case 'slider':
+							config[setting] = parseInt($('#popup_modulesettings_content_' + setting).val());
+							break;
+						case 'switch':
+							config[setting] = $('#popup_modulesettings_content_' + setting).prop('checked');
+							break;
+						case 'key':
+						config[setting] = parseInt($('#popup_modulesettings_content_' + setting).val());
+							break;
+					}
+				}
+				api.setModuleConfig(name, JSON.stringify(config));
+			}
+
+			function refreshSearchResult() {
+				for(module in modules) {
+					$('#window_modules_list_' + module).prop('hidden', module.toLowerCase().indexOf($('#window_modules_search').val().toLowerCase()) == -1)
+				}
+			}
+
+			function startKeyListening(selector) {
+				$(selector).text('...');
+				// 同步执行会有问题
+				setTimeout(function() {
+					key = api.getNextKey();
+					$(selector).prop('value', key);
+					$(selector).text(api.getKeyNameByIndex(key));
+				}, 50);
+			}
+
+			function openModuleSettings(name) {
+				$('#popup_modulesettings_content').empty();
+				let config = JSON.parse(api.getModuleConfig(name));
+				for(widget in config['widgets']) {
+					switch(config['widgets'][widget]['type']) {
+						case 'radio':
+							$('#popup_modulesettings_content').append('<p class="mdui-typo-title">' + widget + '</p><form id="popup_modulesettings_content_' + widget + '"></form>');
+							for(choice in config['widgets'][widget]['choices']) {
+								$('#popup_modulesettings_content_' + widget).append('<div class="mdui-col"><label class="mdui-radio mdui-m-b-1"><input type="radio" name="doc-theme-layout"' + (config['widgets'][widget]['choices'][config['config'][widget]] == config['widgets'][widget]['choices'][choice] && ' checked') + '><i class="mdui-radio-icon"></i>' + config['widgets'][widget]['choices'][choice] + '</label></div>')
+							}
+							break;
+						case 'slider':
+							$('#popup_modulesettings_content').append('<p class="mdui-typo-title">' + widget + '</p><div class="mdui-container" style="display: flex"><label style="margin-right: 16px" class="mdui-slider mdui-slider-discrete"><input id="popup_modulesettings_content_' + widget + '" onchange="$(\'#popup_modulesettings_content_' +  widget + '_slidervalue\').text($(\'#popup_modulesettings_content_' + widget + '\').val())" value="' + config['config'][widget] + '" type="range" step="' + config['widgets'][widget]['step'] + '" min="' + config['widgets'][widget]['min'] + '" max="' + config['widgets'][widget]['max'] +'"/></label><span id="popup_modulesettings_content_' + widget + '_slidervalue" style="width: 36px;" class="mdui-typo-subheading-opacity">' + config['config'][widget] + '</span></div>')
+							break;
+						case 'switch':
+							$('#popup_modulesettings_content').append('<li class="mdui-list-item mdui-ripple"><div class="mdui-list-item-content">' + widget + '</div><label class="mdui-switch"><input id="popup_modulesettings_content_' + widget + '"type="checkbox"' + (config['config'][widget] && ' checked') + '/><i class="mdui-switch-icon"></i></label></li>');
+							break;
+						case 'key':
+							$('#popup_modulesettings_content').append('<p class="mdui-typo-title">' + widget + '</p><button id="popup_modulesettings_content_' + widget + '" onclick="startKeyListening(\'#popup_modulesettings_content_' + widget + '\')" class="mdui-btn mdui-btn-raised mdui-ripple mdui-color-theme-accent" value="' + config['config'][widget] + '">' + api.getKeyNameByIndex(config['config'][widget]) + '</button>');
+							break;
+						case 'title':
+							$('#popup_modulesettings_content').append('<p class="mdui-typo-title">' + widget + '</p>');	
+					}
+					settings[widget] = config['widgets'][widget]['type'];
+				}
+				$('#popup_modulesettings_save').attr('onclick', 'saveModuleSettings(\'' + name + '\')');
+				mdui.mutation();
+				popup_modulesettings.open();
+			}
+
+			const api = java.importClass("api.delta.APIManager").getAPI();
+			setModuleList(JSON.parse(api.getModuleList()));
+			$('#appbar_modules').trigger('click');
+		</script>
+	</body>
+</html>
